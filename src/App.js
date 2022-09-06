@@ -1,4 +1,4 @@
-// import { useState } from "react";
+import { useState } from "react";
 import Navigation from "./components/Navigation";
 import Logo from "./components/Logo";
 import Rank from "./components/Rank";
@@ -6,13 +6,24 @@ import ImageLinkForm from "./components/ImageLinkForm";
 import FaceRecognition from "./components/FaceRecognition";
 
 function App() {
-  // const [formData, setFormData] = useState("");
+  const [formData, setFormData] = useState({
+    input: "",
+    imageUrl: "",
+  });
 
   const handleInputChange = (event) => {
-    console.log(event.target.value);
+    setFormData({
+      ...formData,
+      input: event.target.value,
+    });
   };
 
   const handleSubmit = () => {
+    setFormData({
+      ...formData,
+      imageUrl: formData.input,
+    });
+
     const raw = JSON.stringify({
       user_app_id: {
         user_id: "jibolacodes",
@@ -22,7 +33,7 @@ function App() {
         {
           data: {
             image: {
-              url: "https://samples.clarifai.com/metro-north.jpg",
+              url: formData.imageUrl,
             },
           },
         },
@@ -43,10 +54,13 @@ function App() {
       requestOptions
     )
       .then((response) => response.text())
-      .then((result) => console.log(JSON.parse(result)))
+      .then((result) =>
+        console.log(
+          JSON.parse(result).outputs[0].data.regions[0].region_info.bounding_box
+        )
+      )
       .catch((error) => console.log("error", error));
   };
-
   return (
     <main className="App">
       <Navigation />
@@ -56,7 +70,7 @@ function App() {
         handleInputChange={handleInputChange}
         handleSubmit={handleSubmit}
       />
-      <FaceRecognition />
+      <FaceRecognition imageUrl={formData.imageUrl} />
     </main>
   );
 }
