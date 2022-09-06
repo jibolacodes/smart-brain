@@ -11,7 +11,7 @@ const Logo = () => {
         style={{ height: 150, width: 150 }}
       >
         <div className="Tilt-inner pa3">
-          <img src={brain} alt="logo-image" />
+          <img src={brain} alt="logo" />
         </div>
       </Tilt>
     </div>
